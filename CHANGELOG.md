@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-03-18
+
+### Changed
+- Switch CI to reusable workflows from LegionIO/.github
+
 ## [0.1.0] - 2026-03-18
 
 ### Added
