@@ -1,7 +1,7 @@
 # lex-detect: Environment-Aware Extension Discovery
 
 **Repository Level 3 Documentation**
-- **Parent (Level 2)**: `/Users/miverso2/rubymine/legion/extensions/CLAUDE.md`
+- **Parent (Level 2)**: `/Users/miverso2/rubymine/legion/extensions-core/CLAUDE.md`
 - **Parent (Level 1)**: `/Users/miverso2/rubymine/legion/CLAUDE.md`
 
 ## Purpose
@@ -10,7 +10,7 @@ Legion Extension that scans the local environment and recommends which `lex-*` e
 
 **GitHub**: https://github.com/LegionIO/lex-detect
 **License**: MIT
-**Version**: 0.1.0
+**Version**: 0.1.1
 
 ## Architecture
 
