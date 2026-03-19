@@ -1,0 +1,67 @@
+# lex-detect: Environment-Aware Extension Discovery
+
+**Repository Level 3 Documentation**
+- **Parent (Level 2)**: `/Users/miverso2/rubymine/legion/extensions/CLAUDE.md`
+- **Parent (Level 1)**: `/Users/miverso2/rubymine/legion/CLAUDE.md`
+
+## Purpose
+
+Legion Extension that scans the local environment and recommends which `lex-*` extensions to install. Detects macOS apps, Homebrew formulas/casks, environment variables, open TCP ports, and config files, then maps them to recommended extensions via a declarative catalog.
+
+**GitHub**: https://github.com/LegionIO/lex-detect
+**License**: MIT
+**Version**: 0.1.0
+
+## Architecture
+
+```
+Legion::Extensions::Detect
+├── CATALOG (constant)     # Frozen array of 20 detection rules
+├── Scanner                # Probes environment, matches against catalog
+├── Installer              # Gem.install wrapper with dry_run support
+└── Entry Point            # Public API: scan, missing, install_missing!, catalog
+```
+
+This is NOT a typical LEX — no runners, no actors, no AMQP transport, no Faraday client. It is a local-only utility gem with zero runtime dependencies.
+
+- `data_required? false` — no database needed
+- `remote_invocable? false` — no AMQP queue creation
+
+## Signal Types
+
+| Type | Source | Platform |
+|------|--------|----------|
+| `:app` | `/Applications/*.app` | macOS |
+| `:brew_formula` | `brew list --formula` | macOS/Linux |
+| `:brew_cask` | `brew list --cask` | macOS |
+| `:env` | `ENV.keys` | all |
+| `:port` | TCP connect probe (1s timeout) | all |
+| `:file` | `File.exist?` with `~` expansion | all |
+
+## Public API
+
+```ruby
+Legion::Extensions::Detect.scan             # full scan results
+Legion::Extensions::Detect.missing          # uninstalled gem names
+Legion::Extensions::Detect.install_missing! # install missing gems
+Legion::Extensions::Detect.catalog          # raw CATALOG constant
+```
+
+## Design Docs
+
+- Design: `docs/plans/2026-03-18-lex-detect-design.md`
+- Implementation: `docs/plans/2026-03-18-lex-detect-implementation.md`
+
+## Testing
+
+37 specs across 4 spec files.
+
+```bash
+bundle install
+bundle exec rspec
+bundle exec rubocop
+```
+
+---
+
+**Maintained By**: Matthew Iverson (@Esity)
