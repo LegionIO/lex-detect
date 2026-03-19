@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2] - 2026-03-19
+
+### Added
+- `FullScan` Once actor: runs full environment scan at boot with 2s delay, persists results and writes traces
+- `DeltaScan` Every actor: runs delta detection every 300s, computes additions/removals via Set comparison
+- Data::Local migration for detect_results table (optional persistence)
+
 ## [0.1.1] - 2026-03-18
 
 ### Changed
