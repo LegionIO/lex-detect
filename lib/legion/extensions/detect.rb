@@ -40,6 +40,16 @@ module Legion
           CATALOG
         end
       end
+
+      require_relative 'detect/actors/full_scan' if defined?(Legion::Extensions::Actors::Once)
+      require_relative 'detect/actors/delta_scan' if defined?(Legion::Extensions::Actors::Every)
+
+      if defined?(Legion::Data::Local)
+        Legion::Data::Local.register_migrations(
+          name: :detect,
+          path: File.join(__dir__, 'detect', 'local_migrations')
+        )
+      end
     end
   end
 end
