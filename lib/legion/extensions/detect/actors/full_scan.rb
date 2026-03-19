@@ -28,13 +28,13 @@ module Legion
             model.where.delete
             results.each do |result|
               model.insert(
-                name: result[:name],
-                extensions: Legion::JSON.dump(result[:extensions]),
+                name:            result[:name],
+                extensions:      Legion::JSON.dump(result[:extensions]),
                 matched_signals: Legion::JSON.dump(result[:matched_signals]),
-                installed: Legion::JSON.dump(result[:installed]),
-                scanned_at: Time.now,
-                created_at: Time.now,
-                updated_at: Time.now
+                installed:       Legion::JSON.dump(result[:installed]),
+                scanned_at:      Time.now,
+                created_at:      Time.now,
+                updated_at:      Time.now
               )
             end
           rescue StandardError => e
@@ -46,9 +46,9 @@ module Legion
 
             results.each do |result|
               Legion::Extensions::Agentic::Memory::Trace.write(
-                source: 'lex-detect',
-                category: 'environment',
-                content: "Detected #{result[:name]}: #{result[:matched_signals].join(', ')}",
+                source:     'lex-detect',
+                category:   'environment',
+                content:    "Detected #{result[:name]}: #{result[:matched_signals].join(', ')}",
                 confidence: 0.9
               )
             end

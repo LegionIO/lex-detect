@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module Legion
   module Extensions
     module Detect
@@ -42,8 +40,8 @@ module Legion
 
             Legion::Data::Local.model(:detect_results).all.map do |row|
               {
-                name: row[:name],
-                extensions: Legion::JSON.load(row[:extensions]),
+                name:            row[:name],
+                extensions:      Legion::JSON.load(row[:extensions]),
                 matched_signals: Legion::JSON.load(row[:matched_signals])
               }
             end
@@ -52,8 +50,8 @@ module Legion
           end
 
           def compute_deltas(current, previous)
-            prev_names = previous.map { |r| r[:name] }.to_set
-            curr_names = current.map { |r| r[:name] }.to_set
+            prev_names = previous.to_set { |r| r[:name] }
+            curr_names = current.to_set { |r| r[:name] }
 
             added = current.reject { |r| prev_names.include?(r[:name]) }
             removed = previous.reject { |r| curr_names.include?(r[:name]) }
@@ -69,13 +67,13 @@ module Legion
             model.where.delete
             results.each do |result|
               model.insert(
-                name: result[:name],
-                extensions: Legion::JSON.dump(result[:extensions]),
+                name:            result[:name],
+                extensions:      Legion::JSON.dump(result[:extensions]),
                 matched_signals: Legion::JSON.dump(result[:matched_signals]),
-                installed: Legion::JSON.dump(result[:installed]),
-                scanned_at: Time.now,
-                created_at: Time.now,
-                updated_at: Time.now
+                installed:       Legion::JSON.dump(result[:installed]),
+                scanned_at:      Time.now,
+                created_at:      Time.now,
+                updated_at:      Time.now
               )
             end
           rescue StandardError

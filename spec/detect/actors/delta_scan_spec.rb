@@ -30,8 +30,9 @@ RSpec.describe Legion::Extensions::Detect::Actors::DeltaScan do
   describe '#action' do
     it 'returns only changed results compared to last scan' do
       allow(Legion::Extensions::Detect::Scanner).to receive(:scan).and_return([
-        { name: 'Redis', extensions: ['lex-redis'], matched_signals: ['port:6379'], installed: {} }
-      ])
+                                                                                { name: 'Redis', extensions: ['lex-redis'], matched_signals: ['port:6379'],
+installed: {} }
+                                                                              ])
       allow(actor).to receive(:last_scan_results).and_return([])
 
       results = actor.action
