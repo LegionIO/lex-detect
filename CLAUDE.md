@@ -10,7 +10,7 @@ Legion Extension that scans the local environment and recommends which `lex-*` e
 
 **GitHub**: https://github.com/LegionIO/lex-detect
 **License**: MIT
-**Version**: 0.1.1
+**Version**: 0.1.2
 
 ## Architecture
 
@@ -19,10 +19,13 @@ Legion::Extensions::Detect
 ├── CATALOG (constant)     # Frozen array of 20 detection rules
 ├── Scanner                # Probes environment, matches against catalog
 ├── Installer              # Gem.install wrapper with dry_run support
+├── Actors/
+│   ├── FullScan (Once)    # Full environment scan at startup
+│   └── DeltaScan (Every)  # Periodic delta scan every 6 hours
 └── Entry Point            # Public API: scan, missing, install_missing!, catalog
 ```
 
-This is NOT a typical LEX — no runners, no actors, no AMQP transport, no Faraday client. It is a local-only utility gem with zero runtime dependencies.
+Local-only utility gem. Actors run scans but do not create AMQP queues.
 
 - `data_required? false` — no database needed
 - `remote_invocable? false` — no AMQP queue creation
@@ -49,12 +52,12 @@ Legion::Extensions::Detect.catalog          # raw CATALOG constant
 
 ## Design Docs
 
-- Design: `docs/plans/2026-03-18-lex-detect-design.md`
-- Implementation: `docs/plans/2026-03-18-lex-detect-implementation.md`
+- Design: `docs/work/completed/2026-03-18-lex-detect-design.md`
+- Implementation: `docs/work/completed/2026-03-18-lex-detect-implementation.md`
 
 ## Testing
 
-37 specs across 4 spec files.
+40 specs across 6 spec files.
 
 ```bash
 bundle install
