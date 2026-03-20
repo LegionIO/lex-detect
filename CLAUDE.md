@@ -10,7 +10,7 @@ Legion Extension that scans the local environment and recommends which `lex-*` e
 
 **GitHub**: https://github.com/LegionIO/lex-detect
 **License**: MIT
-**Version**: 0.1.2
+**Version**: 0.1.4
 
 ## Architecture
 
