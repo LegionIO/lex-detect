@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.4] - 2026-03-20
+
+### Changed
+- Version bump for deployment (0.1.3 was released before task observer and cancel task changes landed)
+
 ## [0.1.3] - 2026-03-20
 
 ### Added
