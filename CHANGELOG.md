@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3] - 2026-03-20
+
+### Added
+- `Runners::TaskObserver` for monitoring task failure patterns
+- `check_and_publish_failure_patterns` publishes failure pattern events to AMQP for self-healing pipeline integration
+- `extract_gem_name` helper derives gem name from runner class string
+- `build_failure_pattern` creates structured failure pattern hash
+
 ## [0.1.2] - 2026-03-19
 
 ### Added
