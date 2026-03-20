@@ -5,6 +5,32 @@ require 'spec_helper'
 RSpec.describe Legion::Extensions::Detect::Runners::TaskObserver do
   let(:observer) { described_class }
 
+  describe '#observe' do
+    context 'when Legion::Data is not available' do
+      it 'returns empty alerts' do
+        result = observer.observe
+        expect(result[:alerts]).to eq([])
+        expect(result[:observed]).to eq(0)
+      end
+    end
+  end
+
+  describe '#check_timeout_risk' do
+    it 'returns nil for tasks within expected duration' do
+      task = { id: 1, status: 'running', started_at: Time.now - 10 }
+      result = observer.send(:check_timeout_risk, task, expected_duration: 60)
+      expect(result).to be_nil
+    end
+
+    it 'returns alert for tasks exceeding 2x expected duration' do
+      task = { id: 1, status: 'running', started_at: Time.now - 200, runner_class: 'TestRunner' }
+      result = observer.send(:check_timeout_risk, task, expected_duration: 60)
+      expect(result).not_to be_nil
+      expect(result[:rule]).to eq('timeout_risk')
+      expect(result[:severity]).to eq('warn')
+    end
+  end
+
   describe '#build_failure_pattern' do
     it 'returns failure pattern hash' do
       result = observer.send(:build_failure_pattern, 'lex-test', 'TestRunner', 'NoMethodError',

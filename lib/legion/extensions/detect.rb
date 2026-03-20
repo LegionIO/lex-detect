@@ -5,6 +5,7 @@ require 'legion/extensions/detect/catalog'
 require 'legion/extensions/detect/scanner'
 require 'legion/extensions/detect/installer'
 require_relative 'detect/runners/task_observer'
+require_relative 'detect/runners/cancel_task'
 
 module Legion
   module Extensions
@@ -44,6 +45,7 @@ module Legion
 
       require_relative 'detect/actors/full_scan' if defined?(Legion::Extensions::Actors::Once)
       require_relative 'detect/actors/delta_scan' if defined?(Legion::Extensions::Actors::Every)
+      require_relative 'detect/actors/observer_tick' if defined?(Legion::Extensions::Actors::Every)
 
       if defined?(Legion::Data::Local)
         Legion::Data::Local.register_migrations(

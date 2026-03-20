@@ -7,7 +7,9 @@ module Legion
         module TaskObserver
           extend self
 
-          def observe(tasks:, **)
+          def observe(tasks: nil, since: nil, **)
+            return observe_db(since: since) if tasks.nil?
+
             return { success: true, alerts: [] } unless tasks.is_a?(Array)
 
             alerts = generate_alerts(tasks)
@@ -18,6 +20,103 @@ module Legion
           end
 
           private
+
+          def observe_db(since: nil)
+            return { alerts: [], observed: 0 } unless defined?(Legion::Data)
+
+            since ||= Time.now - 60
+            db_tasks = Legion::Data.connection[:tasks]
+                                   .where { started_at > since }
+                                   .all
+
+            alerts = db_tasks.filter_map { |task| evaluate_rules(task) }
+
+            publish_alerts(alerts) if alerts.any?
+            record_observations(db_tasks, alerts)
+
+            { alerts: alerts, observed: db_tasks.size }
+          rescue StandardError => e
+            { alerts: [], observed: 0, error: e.message }
+          end
+
+          def evaluate_rules(task)
+            check_timeout_risk(task) ||
+              check_repeated_failure(task) ||
+              check_cost_spike(task)
+          end
+
+          def check_timeout_risk(task, expected_duration: 120)
+            return nil unless task[:status] == 'running' && task[:started_at]
+
+            elapsed = Time.now - task[:started_at]
+            return nil unless elapsed > (expected_duration * 2)
+
+            {
+              rule:        'timeout_risk',
+              runner:      task[:runner_class],
+              task_id:     task[:id],
+              severity:    'warn',
+              detail:      "Running for #{elapsed.round}s (expected #{expected_duration}s)",
+              observed_at: Time.now.utc
+            }
+          end
+
+          def check_repeated_failure(task)
+            return nil unless defined?(Legion::Data) && task[:runner_class]
+
+            count = Legion::Data.connection[:tasks]
+                                .where(runner_class: task[:runner_class], status: 'failed')
+                                .where { started_at > Time.now - 600 }
+                                .count
+            return nil unless count >= 3
+
+            {
+              rule:        'repeated_failure',
+              runner:      task[:runner_class],
+              task_id:     task[:id],
+              severity:    'critical',
+              detail:      "#{count} failures in last 10 minutes",
+              observed_at: Time.now.utc
+            }
+          rescue StandardError
+            nil
+          end
+
+          def check_cost_spike(_task)
+            nil
+          end
+
+          def publish_alerts(alerts)
+            return unless defined?(Legion::Transport)
+
+            alerts.each do |alert|
+              Legion::Transport::Messages::Dynamic.new(
+                function: 'observer_alert',
+                payload:  alert
+              ).publish
+            end
+          rescue StandardError
+            nil
+          end
+
+          def record_observations(db_tasks, alerts)
+            return unless defined?(Legion::Data::Local)
+
+            db_tasks.each do |task|
+              alert = alerts.find { |a| a[:task_id] == task[:id] }
+              Legion::Data::Local.connection[:observer_events].insert(
+                task_id:     task[:id],
+                runner:      task[:runner_class],
+                rule:        alert&.dig(:rule),
+                severity:    alert&.dig(:severity),
+                duration:    task[:started_at] ? (Time.now - task[:started_at]).round(2) : nil,
+                token_cost:  nil,
+                observed_at: Time.now.utc
+              )
+            end
+          rescue StandardError
+            nil
+          end
 
           def generate_alerts(tasks)
             failed = tasks.select { |t| t[:status] == 'failed' }

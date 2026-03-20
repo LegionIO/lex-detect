@@ -3,10 +3,17 @@
 ## [0.1.3] - 2026-03-20
 
 ### Added
-- `Runners::TaskObserver` for monitoring task failure patterns
+- `Runners::TaskObserver` for monitoring task failure patterns; supports DB-based `observe(since:)` and array-based `observe(tasks:)` calling styles
+- `check_timeout_risk` detects tasks running beyond 2x expected duration and emits `timeout_risk` alert
+- `check_repeated_failure` detects >=3 failures in 10 minutes per runner class
+- `publish_alerts` forwards structured alerts to AMQP when `Legion::Transport` is available
+- `record_observations` persists per-task observation records to `Legion::Data::Local` observer_events table
 - `check_and_publish_failure_patterns` publishes failure pattern events to AMQP for self-healing pipeline integration
 - `extract_gem_name` helper derives gem name from runner class string
 - `build_failure_pattern` creates structured failure pattern hash
+- `Runners::CancelTask` sets `cancelled_at` timestamp on tasks, guarded by `Legion::Data` availability
+- `Actors::ObserverTick` runs `TaskObserver#observe` every 60 seconds, passing `since:` for incremental DB scans
+- Local migration `20260320000001_create_observer_events` creates observer_events table for cognitive observation history
 
 ## [0.1.2] - 2026-03-19
 
