@@ -20,7 +20,7 @@ end
 
 require_relative '../../../lib/legion/extensions/detect/actors/full_scan'
 
-RSpec.describe Legion::Extensions::Detect::Actors::FullScan do
+RSpec.describe Legion::Extensions::Detect::Actor::FullScan do
   subject(:actor) { described_class.allocate }
 
   describe '#action' do

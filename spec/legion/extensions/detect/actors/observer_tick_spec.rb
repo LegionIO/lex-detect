@@ -25,7 +25,7 @@ $LOADED_FEATURES << 'legion/extensions/actors/every'
 
 require_relative '../../../../../lib/legion/extensions/detect/actors/observer_tick'
 
-RSpec.describe Legion::Extensions::Detect::Actors::ObserverTick do
+RSpec.describe Legion::Extensions::Detect::Actor::ObserverTick do
   subject(:actor) { described_class.new }
 
   describe '#time' do

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.5] - 2026-03-20
+
+### Fixed
+- Actor module namespace corrected from `Actors` (plural) to `Actor` (singular) to match framework expectations; resolves "Actor constant not defined, skipping" warnings for FullScan, DeltaScan, and ObserverTick
+
 ## [0.1.4] - 2026-03-20
 
 ### Changed

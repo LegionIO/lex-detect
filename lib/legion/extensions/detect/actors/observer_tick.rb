@@ -3,7 +3,7 @@
 module Legion
   module Extensions
     module Detect
-      module Actors
+      module Actor
         class ObserverTick < Legion::Extensions::Actors::Every
           def time = 60
           def run_now? = false

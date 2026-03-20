@@ -24,7 +24,7 @@ end
 
 require_relative '../../../lib/legion/extensions/detect/actors/delta_scan'
 
-RSpec.describe Legion::Extensions::Detect::Actors::DeltaScan do
+RSpec.describe Legion::Extensions::Detect::Actor::DeltaScan do
   subject(:actor) { described_class.allocate }
 
   describe '#action' do

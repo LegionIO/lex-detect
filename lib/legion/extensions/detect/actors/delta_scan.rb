@@ -3,7 +3,7 @@
 module Legion
   module Extensions
     module Detect
-      module Actors
+      module Actor
         class DeltaScan < Legion::Extensions::Actors::Every
           def time
             settings_interval || 300

@@ -3,7 +3,7 @@
 module Legion
   module Extensions
     module Detect
-      module Actors
+      module Actor
         class FullScan < Legion::Extensions::Actors::Once
           def delay
             2.0
