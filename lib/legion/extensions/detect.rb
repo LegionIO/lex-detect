@@ -4,6 +4,7 @@ require 'legion/extensions/detect/version'
 require 'legion/extensions/detect/catalog'
 require 'legion/extensions/detect/scanner'
 require 'legion/extensions/detect/installer'
+require_relative 'detect/runners/task_observer'
 
 module Legion
   module Extensions
