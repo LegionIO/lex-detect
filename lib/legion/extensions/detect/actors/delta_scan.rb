@@ -5,6 +5,10 @@ module Legion
     module Detect
       module Actor
         class DeltaScan < Legion::Extensions::Actors::Every
+          def runner_class
+            self.class
+          end
+
           def time
             settings_interval || 300
           end

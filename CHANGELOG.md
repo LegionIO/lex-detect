@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.6] - 2026-03-20
+
+### Fixed
+- `FullScan`, `DeltaScan`, and `ObserverTick` actors now override `runner_class` to return `self.class`, preventing the framework from attempting `Kernel.const_get` lookups for non-existent constants like `Runners::FullScan`
+
 ## [0.1.5] - 2026-03-20
 
 ### Fixed

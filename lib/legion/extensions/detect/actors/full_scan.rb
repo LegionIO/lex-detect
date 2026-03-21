@@ -5,6 +5,10 @@ module Legion
     module Detect
       module Actor
         class FullScan < Legion::Extensions::Actors::Once
+          def runner_class
+            self.class
+          end
+
           def delay
             2.0
           end

@@ -5,6 +5,10 @@ module Legion
     module Detect
       module Actor
         class ObserverTick < Legion::Extensions::Actors::Every
+          def runner_class
+            self.class
+          end
+
           def time = 60
           def run_now? = false
           def use_runner? = false
