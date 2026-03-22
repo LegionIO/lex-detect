@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.7] - 2026-03-22
+
+### Fixed
+- `TaskObserver` queries now use `created` column instead of nonexistent `started_at` on the tasks table, fixing `PG::UndefinedColumn` errors on PostgreSQL
+
 ## [0.1.6] - 2026-03-20
 
 ### Fixed

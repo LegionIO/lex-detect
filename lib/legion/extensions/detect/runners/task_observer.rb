@@ -26,7 +26,7 @@ module Legion
 
             since ||= Time.now - 60
             db_tasks = Legion::Data.connection[:tasks]
-                                   .where { started_at > since }
+                                   .where { created > since }
                                    .all
 
             alerts = db_tasks.filter_map { |task| evaluate_rules(task) }
@@ -46,9 +46,9 @@ module Legion
           end
 
           def check_timeout_risk(task, expected_duration: 120)
-            return nil unless task[:status] == 'running' && task[:started_at]
+            return nil unless task[:status] == 'running' && task[:created]
 
-            elapsed = Time.now - task[:started_at]
+            elapsed = Time.now - task[:created]
             return nil unless elapsed > (expected_duration * 2)
 
             {
@@ -66,7 +66,7 @@ module Legion
 
             count = Legion::Data.connection[:tasks]
                                 .where(runner_class: task[:runner_class], status: 'failed')
-                                .where { started_at > Time.now - 600 }
+                                .where { created > Time.now - 600 }
                                 .count
             return nil unless count >= 3
 
@@ -109,7 +109,7 @@ module Legion
                 runner:      task[:runner_class],
                 rule:        alert&.dig(:rule),
                 severity:    alert&.dig(:severity),
-                duration:    task[:started_at] ? (Time.now - task[:started_at]).round(2) : nil,
+                duration:    task[:created] ? (Time.now - task[:created]).round(2) : nil,
                 token_cost:  nil,
                 observed_at: Time.now.utc
               )

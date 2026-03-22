@@ -17,13 +17,13 @@ RSpec.describe Legion::Extensions::Detect::Runners::TaskObserver do
 
   describe '#check_timeout_risk' do
     it 'returns nil for tasks within expected duration' do
-      task = { id: 1, status: 'running', started_at: Time.now - 10 }
+      task = { id: 1, status: 'running', created: Time.now - 10 }
       result = observer.send(:check_timeout_risk, task, expected_duration: 60)
       expect(result).to be_nil
     end
 
     it 'returns alert for tasks exceeding 2x expected duration' do
-      task = { id: 1, status: 'running', started_at: Time.now - 200, runner_class: 'TestRunner' }
+      task = { id: 1, status: 'running', created: Time.now - 200, runner_class: 'TestRunner' }
       result = observer.send(:check_timeout_risk, task, expected_duration: 60)
       expect(result).not_to be_nil
       expect(result[:rule]).to eq('timeout_risk')
