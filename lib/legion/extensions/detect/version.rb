@@ -3,7 +3,7 @@
 module Legion
   module Extensions
     module Detect
-      VERSION = '0.1.7'
+      VERSION = '0.2.0'
     end
   end
 end

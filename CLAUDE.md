@@ -10,7 +10,7 @@ Legion Extension that scans the local environment and recommends which `lex-*` e
 
 **GitHub**: https://github.com/LegionIO/lex-detect
 **License**: MIT
-**Version**: 0.1.4
+**Version**: 0.2.0
 
 ## Architecture
 
@@ -57,7 +57,7 @@ Legion::Extensions::Detect.catalog          # raw CATALOG constant
 
 ## Testing
 
-40 specs across 6 spec files.
+54 specs across 9 spec files.
 
 ```bash
 bundle install

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0] - 2026-03-22
+
+### Added
+- SARIF 2.1.0 formatter (`Formatters::Sarif`) for GitHub Code Scanning integration
+- Markdown PR comment formatter (`Formatters::MarkdownPr`) for GitHub PR annotations
+- `format_results(format:, detections:)` public API method supporting `:sarif`, `:markdown`, and `:json` output formats
+
 ## [0.1.7] - 2026-03-22
 
 ### Fixed
