@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1] - 2026-03-22
+
+### Added
+- `Formatters::Json` passthrough formatter returning detections unchanged (or as pretty-printed JSON via `.to_json`)
+- `Formatters` module entry point with `Formatters.format(detections, format:)` dispatcher for `:sarif`, `:markdown`, and `:json`
+- `format_results` now delegates to `Formatters.format` instead of dispatching inline
+- 5 new specs for `Formatters::Json` covering passthrough identity, field preservation, JSON serialization, and empty input
+
 ## [0.2.0] - 2026-03-22
 
 ### Added
