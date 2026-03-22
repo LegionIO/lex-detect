@@ -4,6 +4,8 @@ require 'legion/extensions/detect/version'
 require 'legion/extensions/detect/catalog'
 require 'legion/extensions/detect/scanner'
 require 'legion/extensions/detect/installer'
+require 'legion/extensions/detect/formatters/sarif'
+require 'legion/extensions/detect/formatters/markdown_pr'
 require_relative 'detect/runners/task_observer'
 require_relative 'detect/runners/cancel_task'
 
@@ -40,6 +42,15 @@ module Legion
 
         def catalog
           CATALOG
+        end
+
+        def format_results(format: :json, detections: nil)
+          results = detections || scan
+          case format.to_sym
+          when :sarif    then Formatters::Sarif.to_json(results)
+          when :markdown then Formatters::MarkdownPr.format(results)
+          else results
+          end
         end
       end
 
