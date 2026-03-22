@@ -1,0 +1,78 @@
+name: Extension Detection Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  security-events: write
+  pull-requests: write
+
+jobs:
+  detect:
+    name: Scan environment for missing extensions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Run detection scan (SARIF)
+        run: |
+          bundle exec ruby -e '
+            require "legion/extensions/detect"
+            File.write("detect-results.sarif", Legion::Extensions::Detect.format_results(format: :sarif))
+          '
+
+      - name: Upload SARIF to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: detect-results.sarif
+          category: legion-detect
+
+      - name: Post PR comment (markdown)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { execSync } = require('child_process');
+
+            const md = execSync(
+              `bundle exec ruby -e 'require "legion/extensions/detect"; puts Legion::Extensions::Detect.format_results(format: :markdown)'`,
+              { encoding: 'utf-8' }
+            );
+
+            if (!md.trim()) return;
+
+            const body = `## Legion Extension Detection\n\n${md}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('Legion Extension Detection')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
