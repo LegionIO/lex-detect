@@ -13,6 +13,18 @@ module Legion
             2.0
           end
 
+          def use_runner?
+            false
+          end
+
+          def check_subtask?
+            false
+          end
+
+          def generate_task?
+            false
+          end
+
           def action(**_opts)
             results = Scanner.scan
             persist_results(results)
