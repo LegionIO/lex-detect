@@ -17,6 +17,18 @@ module Legion
             false
           end
 
+          def use_runner?
+            false
+          end
+
+          def check_subtask?
+            false
+          end
+
+          def generate_task?
+            false
+          end
+
           def action(**_opts)
             current = Scanner.scan
             previous = last_scan_results

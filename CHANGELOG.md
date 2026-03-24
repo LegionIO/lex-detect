@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.3] - 2026-03-24
+
+### Fixed
+- FullScan and DeltaScan actors now override `use_runner?` to return false, preventing them from going through `Runner.run` which requires a `function` parameter they don't define; this caused null function/result in CheckSubtask messages
+
 ## [0.2.2] - 2026-03-22
 
 ### Changed
