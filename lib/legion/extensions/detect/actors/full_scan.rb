@@ -38,23 +38,23 @@ module Legion
           def persist_results(results)
             return unless defined?(Legion::Data::Local) &&
                           Legion::Data::Local.respond_to?(:connected?) &&
-                          Legion::Data::Local.connected?
+                          Legion::Data::Local.connected? # rubocop:disable Legion/HelperMigration/DirectData
 
-            model = Legion::Data::Local.model(:detect_results)
+            model = Legion::Data::Local.model(:detect_results) # rubocop:disable Legion/HelperMigration/DirectData
             model.where.delete
             results.each do |result|
               model.insert(
                 name:            result[:name],
-                extensions:      Legion::JSON.dump(result[:extensions]),
-                matched_signals: Legion::JSON.dump(result[:matched_signals]),
-                installed:       Legion::JSON.dump(result[:installed]),
+                extensions:      Legion::JSON.dump(result[:extensions]), # rubocop:disable Legion/HelperMigration/DirectJson
+                matched_signals: Legion::JSON.dump(result[:matched_signals]), # rubocop:disable Legion/HelperMigration/DirectJson
+                installed:       Legion::JSON.dump(result[:installed]), # rubocop:disable Legion/HelperMigration/DirectJson
                 scanned_at:      Time.now,
                 created_at:      Time.now,
                 updated_at:      Time.now
               )
             end
           rescue StandardError => e
-            Legion::Logging.debug { "FullScan persist failed: #{e.message}" } if defined?(Legion::Logging)
+            Legion::Logging.debug { "FullScan persist failed: #{e.message}" } if defined?(Legion::Logging) # rubocop:disable Legion/HelperMigration/DirectLogging
           end
 
           def write_traces(results)
@@ -69,14 +69,14 @@ module Legion
               )
             end
           rescue StandardError => e
-            Legion::Logging.debug { "FullScan trace write failed: #{e.message}" } if defined?(Legion::Logging)
+            Legion::Logging.debug { "FullScan trace write failed: #{e.message}" } if defined?(Legion::Logging) # rubocop:disable Legion/HelperMigration/DirectLogging
           end
 
           def transition_catalog
             return unless defined?(Legion::Extensions::Catalog)
 
             Legion::Extensions::Catalog.transition('lex-detect', :running)
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
         end
