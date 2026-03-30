@@ -137,9 +137,9 @@ RSpec.describe Legion::Extensions::Detect::Scanner do
 
   describe '.reset!' do
     it 'clears the memoized environment' do
-      described_class.instance_variable_set(:@environment, { cached: true })
+      described_class.instance_variable_set(:@gather_environment, { cached: true })
       described_class.reset!
-      expect(described_class.instance_variable_get(:@environment)).to be_nil
+      expect(described_class.instance_variable_get(:@gather_environment)).to be_nil
     end
   end
 end

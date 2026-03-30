@@ -23,7 +23,7 @@ module Legion
           end
 
           def gather_environment
-            {
+            @gather_environment ||= { # rubocop:disable ThreadSafety/ClassInstanceVariable
               apps:          scan_applications,
               brew_formulas: scan_brew_formulas,
               brew_casks:    scan_brew_casks,
@@ -34,7 +34,7 @@ module Legion
           end
 
           def reset!
-            @environment = nil # rubocop:disable ThreadSafety/ClassInstanceVariable
+            @gather_environment = nil # rubocop:disable ThreadSafety/ClassInstanceVariable
           end
 
           private

@@ -49,9 +49,11 @@ module Legion
         end
       end
 
-      require_relative 'detect/actors/full_scan'
-      require_relative 'detect/actors/delta_scan'
-      require_relative 'detect/actors/observer_tick'
+      if defined?(Legion::Extensions::Actors)
+        require_relative 'detect/actors/full_scan'
+        require_relative 'detect/actors/delta_scan'
+        require_relative 'detect/actors/observer_tick'
+      end
 
       if defined?(Legion::Data::Local)
         Legion::Data::Local.register_migrations(
