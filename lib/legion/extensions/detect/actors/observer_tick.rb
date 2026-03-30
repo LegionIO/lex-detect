@@ -4,7 +4,7 @@ module Legion
   module Extensions
     module Detect
       module Actor
-        class ObserverTick < Legion::Extensions::Actors::Every
+        class ObserverTick < Legion::Extensions::Actors::Every # rubocop:disable Legion/Extension/EveryActorRequiresTime
           def runner_class
             self.class
           end

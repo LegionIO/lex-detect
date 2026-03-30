@@ -78,7 +78,7 @@ module Legion
               detail:      "#{count} failures in last 10 minutes",
               observed_at: Time.now.utc
             }
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 
@@ -87,7 +87,7 @@ module Legion
           end
 
           def publish_alerts(alerts)
-            return unless defined?(Legion::Transport)
+            return unless Legion.const_defined?(:Transport, false)
 
             alerts.each do |alert|
               Legion::Transport::Messages::Dynamic.new(
@@ -95,7 +95,7 @@ module Legion
                 payload:  alert
               ).publish
             end
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 
@@ -104,7 +104,7 @@ module Legion
 
             db_tasks.each do |task|
               alert = alerts.find { |a| a[:task_id] == task[:id] }
-              Legion::Data::Local.connection[:observer_events].insert(
+              Legion::Data::Local.connection[:observer_events].insert( # rubocop:disable Legion/HelperMigration/DirectData
                 task_id:     task[:id],
                 runner:      task[:runner_class],
                 rule:        alert&.dig(:rule),
@@ -114,7 +114,7 @@ module Legion
                 observed_at: Time.now.utc
               )
             end
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 
@@ -130,7 +130,7 @@ module Legion
           end
 
           def check_and_publish_failure_patterns(tasks)
-            return unless defined?(Legion::Data) && defined?(Legion::Transport)
+            return unless defined?(Legion::Data) && Legion.const_defined?(:Transport, false)
 
             runner_failures = tasks.select { |t| t[:status] == 'failed' }
                                    .group_by { |t| t[:runner_class] }
@@ -145,7 +145,7 @@ module Legion
               pattern = build_failure_pattern(gem_name, runner_class, error_class, backtraces, failures.size)
               publish_failure_pattern(pattern)
             end
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 
@@ -167,7 +167,7 @@ module Legion
               function: 'auto_fix',
               payload:  pattern
             ).publish
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 

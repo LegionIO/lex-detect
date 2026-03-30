@@ -4,7 +4,7 @@ module Legion
   module Extensions
     module Detect
       module Runners
-        module CancelTask
+        module CancelTask # rubocop:disable Legion/Extension/RunnerIncludeHelpers
           def cancel_task(task_id:, **)
             return { success: false, reason: :data_unavailable } unless defined?(Legion::Data)
 
