@@ -11,7 +11,7 @@ require_relative 'detect/runners/cancel_task'
 module Legion
   module Extensions
     module Detect
-      extend Legion::Extensions::Core if Legion::Extensions.const_defined?(:Core)
+      extend Legion::Extensions::Core if Legion::Extensions.const_defined?(:Core, false)
 
       class << self
         def data_required?
@@ -49,9 +49,9 @@ module Legion
         end
       end
 
-      require_relative 'detect/actors/full_scan' if defined?(Legion::Extensions::Actors::Once)
-      require_relative 'detect/actors/delta_scan' if defined?(Legion::Extensions::Actors::Every)
-      require_relative 'detect/actors/observer_tick' if defined?(Legion::Extensions::Actors::Every)
+      require_relative 'detect/actors/full_scan'
+      require_relative 'detect/actors/delta_scan'
+      require_relative 'detect/actors/observer_tick'
 
       if defined?(Legion::Data::Local)
         Legion::Data::Local.register_migrations(

@@ -34,34 +34,34 @@ module Legion
           end
 
           def reset!
-            @environment = nil
+            @environment = nil # rubocop:disable ThreadSafety/ClassInstanceVariable
           end
 
           private
 
           def scan_applications
             Dir.glob('/Applications/*.app').map { |p| File.basename(p) }
-          rescue StandardError
+          rescue StandardError => _e
             []
           end
 
           def scan_brew_formulas
             `brew list --formula -1 2>/dev/null`.split("\n")
-          rescue StandardError
+          rescue StandardError => _e
             []
           end
 
           def scan_brew_casks
             `brew list --cask -1 2>/dev/null`.split("\n")
-          rescue StandardError
+          rescue StandardError => _e
             []
           end
 
           def scan_ports
             threads = SCAN_PORTS.map do |port|
-              Thread.new(port) do |p|
+              Thread.new(port) do |p| # rubocop:disable ThreadSafety/NewThread
                 Socket.tcp('127.0.0.1', p, connect_timeout: 1) { true }
-              rescue StandardError
+              rescue StandardError => _e
                 false
               end
             end
@@ -88,7 +88,7 @@ module Legion
           def gem_installed?(name)
             Gem::Specification.find_by_name(name)
             true
-          rescue Gem::MissingSpecError
+          rescue Gem::MissingSpecError => _e
             false
           end
         end

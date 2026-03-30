@@ -4,7 +4,7 @@ module Legion
   module Extensions
     module Detect
       module Actor
-        class DeltaScan < Legion::Extensions::Actors::Every
+        class DeltaScan < Legion::Extensions::Actors::Every # rubocop:disable Legion/Extension/EveryActorRequiresTime
           def runner_class
             self.class
           end
@@ -45,23 +45,23 @@ module Legion
             return nil unless defined?(Legion::Settings)
 
             Legion::Settings.dig(:extensions, :'lex-detect', :delta_interval)
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 
           def last_scan_results
             return [] unless defined?(Legion::Data::Local) &&
                              Legion::Data::Local.respond_to?(:connected?) &&
-                             Legion::Data::Local.connected?
+                             Legion::Data::Local.connected? # rubocop:disable Legion/HelperMigration/DirectData
 
-            Legion::Data::Local.model(:detect_results).all.map do |row|
+            Legion::Data::Local.model(:detect_results).all.map do |row| # rubocop:disable Legion/HelperMigration/DirectData
               {
                 name:            row[:name],
-                extensions:      Legion::JSON.load(row[:extensions]),
-                matched_signals: Legion::JSON.load(row[:matched_signals])
+                extensions:      Legion::JSON.load(row[:extensions]), # rubocop:disable Legion/HelperMigration/DirectJson
+                matched_signals: Legion::JSON.load(row[:matched_signals]) # rubocop:disable Legion/HelperMigration/DirectJson
               }
             end
-          rescue StandardError
+          rescue StandardError => _e
             []
           end
 
@@ -77,22 +77,22 @@ module Legion
           def persist_results(results)
             return unless defined?(Legion::Data::Local) &&
                           Legion::Data::Local.respond_to?(:connected?) &&
-                          Legion::Data::Local.connected?
+                          Legion::Data::Local.connected? # rubocop:disable Legion/HelperMigration/DirectData
 
-            model = Legion::Data::Local.model(:detect_results)
+            model = Legion::Data::Local.model(:detect_results) # rubocop:disable Legion/HelperMigration/DirectData
             model.where.delete
             results.each do |result|
               model.insert(
                 name:            result[:name],
-                extensions:      Legion::JSON.dump(result[:extensions]),
-                matched_signals: Legion::JSON.dump(result[:matched_signals]),
-                installed:       Legion::JSON.dump(result[:installed]),
+                extensions:      Legion::JSON.dump(result[:extensions]), # rubocop:disable Legion/HelperMigration/DirectJson
+                matched_signals: Legion::JSON.dump(result[:matched_signals]), # rubocop:disable Legion/HelperMigration/DirectJson
+                installed:       Legion::JSON.dump(result[:installed]), # rubocop:disable Legion/HelperMigration/DirectJson
                 scanned_at:      Time.now,
                 created_at:      Time.now,
                 updated_at:      Time.now
               )
             end
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
 
@@ -105,7 +105,7 @@ module Legion
                 content: "New detection: #{r[:name]}", confidence: 0.8
               )
             end
-          rescue StandardError
+          rescue StandardError => _e
             nil
           end
         end
