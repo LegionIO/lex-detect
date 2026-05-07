@@ -28,7 +28,7 @@ RSpec.describe Legion::Extensions::Detect::Scanner do
       expect(results.size).to be >= 1
       claude = results.find { |r| r[:name] == 'Claude' }
       expect(claude).not_to be_nil
-      expect(claude[:extensions]).to eq(['lex-claude'])
+      expect(claude[:extensions]).to eq(['lex-llm-anthropic'])
       expect(claude[:matched_signals]).to include('app:Claude.app')
     end
 

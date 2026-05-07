@@ -7,9 +7,9 @@ RSpec.describe Legion::Extensions::Detect::Formatters::MarkdownPr do
     [
       {
         name:            'Claude',
-        extensions:      ['lex-claude'],
+        extensions:      ['lex-llm-anthropic'],
         matched_signals: ['app:Claude.app'],
-        installed:       { 'lex-claude' => true }
+        installed:       { 'lex-llm-anthropic' => true }
       },
       {
         name:            'Vault',
@@ -35,7 +35,7 @@ RSpec.describe Legion::Extensions::Detect::Formatters::MarkdownPr do
 
     it 'lists installed extensions with checkmark' do
       expect(output).to include('Claude')
-      expect(output).to include('`lex-claude`')
+      expect(output).to include('`lex-llm-anthropic`')
       expect(output).to include(':white_check_mark:')
     end
 
@@ -54,8 +54,8 @@ RSpec.describe Legion::Extensions::Detect::Formatters::MarkdownPr do
   describe '.format with all installed' do
     it 'has no missing section' do
       all_installed = [{
-        name: 'Claude', extensions: ['lex-claude'],
-        matched_signals: ['app:Claude.app'], installed: { 'lex-claude' => true }
+        name: 'Claude', extensions: ['lex-llm-anthropic'],
+        matched_signals: ['app:Claude.app'], installed: { 'lex-llm-anthropic' => true }
       }]
       output = described_class.format(all_installed)
       expect(output).not_to include('Missing Extensions')
