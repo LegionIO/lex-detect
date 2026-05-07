@@ -8,9 +8,9 @@ RSpec.describe Legion::Extensions::Detect::Formatters::Sarif do
     [
       {
         name:            'Claude',
-        extensions:      ['lex-claude'],
+        extensions:      ['lex-llm-anthropic'],
         matched_signals: ['app:Claude.app'],
-        installed:       { 'lex-claude' => true }
+        installed:       { 'lex-llm-anthropic' => true }
       },
       {
         name:            'Vault',
@@ -46,14 +46,14 @@ RSpec.describe Legion::Extensions::Detect::Formatters::Sarif do
     it 'generates rules for all extensions' do
       rules = sarif['runs'][0]['tool']['driver']['rules']
       rule_ids = rules.map { |r| r['id'] }
-      expect(rule_ids).to include('detect/lex-claude', 'detect/lex-vault', 'detect/lex-redis', 'detect/legion-cache')
+      expect(rule_ids).to include('detect/lex-llm-anthropic', 'detect/lex-vault', 'detect/lex-redis', 'detect/legion-cache')
     end
 
     it 'only generates results for missing extensions' do
       results = sarif['runs'][0]['results']
       result_rules = results.map { |r| r['ruleId'] }
       expect(result_rules).to include('detect/lex-vault', 'detect/lex-redis')
-      expect(result_rules).not_to include('detect/lex-claude', 'detect/legion-cache')
+      expect(result_rules).not_to include('detect/lex-llm-anthropic', 'detect/legion-cache')
     end
 
     it 'includes matched signals in result properties' do
@@ -89,8 +89,8 @@ RSpec.describe Legion::Extensions::Detect::Formatters::Sarif do
   describe '.format when all extensions installed' do
     it 'returns empty results' do
       all_installed = [{
-        name: 'Claude', extensions: ['lex-claude'],
-        matched_signals: ['app:Claude.app'], installed: { 'lex-claude' => true }
+        name: 'Claude', extensions: ['lex-llm-anthropic'],
+        matched_signals: ['app:Claude.app'], installed: { 'lex-llm-anthropic' => true }
       }]
       sarif = described_class.format(all_installed)
       expect(sarif['runs'][0]['results']).to eq([])

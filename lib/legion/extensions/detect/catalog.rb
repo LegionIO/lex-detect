@@ -7,7 +7,7 @@ module Legion
         # AI Providers
         {
           name:       'Claude',
-          extensions: ['lex-claude'],
+          extensions: ['lex-llm-anthropic'],
           signals:    [
             { type: :app, match: 'Claude.app' },
             { type: :brew_cask, match: 'claude' },
@@ -18,7 +18,7 @@ module Legion
         },
         {
           name:       'OpenAI',
-          extensions: ['lex-openai'],
+          extensions: ['lex-llm-openai'],
           signals:    [
             { type: :app, match: 'ChatGPT.app' },
             { type: :brew_cask, match: 'chatgpt' },
@@ -28,7 +28,7 @@ module Legion
         },
         {
           name:       'Ollama',
-          extensions: ['lex-openai'],
+          extensions: ['lex-llm-ollama'],
           signals:    [
             { type: :brew_formula, match: 'ollama' },
             { type: :port, match: 11_434 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.5] - 2026-05-07
+
+### Changed
+- Updated detection catalog to recommend `lex-llm-anthropic`, `lex-llm-openai`, and `lex-llm-ollama` in place of the deprecated `lex-claude`, `lex-openai`, and `lex-ollama` extensions.
+
 ## [0.2.4] - 2026-03-30
 
 ### Changed
