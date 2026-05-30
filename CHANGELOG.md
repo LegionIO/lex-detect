@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.6] - 2026-05-29
+
+### Added
+- Migration to add indexes on `name` and `scanned_at` columns of the `detect_results` local SQLite table, eliminating full table scans on filtered lookups
+
 ## [0.2.5] - 2026-05-07
 
 ### Changed
